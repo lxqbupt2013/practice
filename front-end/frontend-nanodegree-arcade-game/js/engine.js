@@ -9,11 +9,12 @@
  * drawn but that is not the case. What's really happening is the entire "scene"
  * is being drawn over and over, presenting the illusion of animation.
  *
- * This engine makes the canvas' context (ctx) object globally available to make 
+ * This engine makes the canvas' context (ctx) object globally available to make
  * writing app.js a little simpler to work with.
  */
 
-var Engine = (function(global) {
+var Engine = (function (global) {
+
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
      * set the canvas elements height/width and add it to the DOM.
@@ -33,6 +34,7 @@ var Engine = (function(global) {
      * and handles properly calling the update and render methods.
      */
     function main() {
+
         /* Get our time delta information which is required if your game
          * requires smooth animation. Because everyone's computer processes
          * instructions at different speeds we need a constant value that
@@ -42,23 +44,23 @@ var Engine = (function(global) {
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
 
-        document.addEventListener('keyup', function(e) {
-            if(e.keyCode === 32 && iswin === false) {
+        document.addEventListener('keyup', function (e) {
+            if (e.keyCode === 32 && iswin === false) {
 
                 /*throttle(func, context, interval)参数介绍
                  * func: Function to be triggered
                  * context: The execution context of the function, which is the point of this
                  * interval: How many milliseconds can be executed before executing the triggered function
                  */
-                throttle(changePause,null,1500);
-            } 
-      
-            if(e.keyCode === 32 && iswin === true) {
+                throttle(changePause, null, 1500);
+            }
+
+            if (e.keyCode === 32 && iswin === true) {
 
                 changePause();
                 reset();
-
             }
+
         });
 
         /* Call our update/render functions, pass along the time delta to
@@ -76,31 +78,29 @@ var Engine = (function(global) {
          * function again as soon as the browser is able to draw another frame.
          */
         win.requestAnimationFrame(main);
-
     }
 
-    var changePause = function() {
+    var changePause = function () {
         gamePause = gamePause === false ? true : false;
-    }
-
+    };
 
     // throttle
+
     /* Space events are triggered frequently.
      * Set the timer to ignore repeated taps in a very short time.
      */
-    function throttle(func, context, interval){
+    function throttle(func, context, interval) {
         clearTimeout(func.timer);
         func.cur = Date.now();
-        if(!func.start){
+        if (!func.start) {
             func.start = func.cur;
         }
 
-         if(func.cur - func.start > interval){
+        if (func.cur - func.start > interval) {
             func.call(context);
             func.start = func.cur;
         }
     }
-
 
     /* This function does some initial setup that should only occur once,
      * particularly setting the lastTime variable that is required for the
@@ -127,10 +127,12 @@ var Engine = (function(global) {
             gamePause = true;
             // iswin = false;
         }
+
         // Update when not paused
         if (!gamePause) {
             updateEntities(dt);
         }
+
         checkCollisions();
     }
 
@@ -142,7 +144,7 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
-        allEnemies.forEach(function(enemy) {
+        allEnemies.forEach(function (enemy) {
             enemy.update(dt);
         });
         player.update();
@@ -155,23 +157,25 @@ var Engine = (function(global) {
      * they are just drawing the entire screen over and over.
      */
     function render() {
+
         /* This array holds the relative URL to the image used
          * for that particular row of the game level.
          */
         var rowImages = [
-                'images/water-block.png',   // Top row is water
-                'images/stone-block.png',   // Row 1 of 3 of stone
-                'images/stone-block.png',   // Row 2 of 3 of stone
-                'images/stone-block.png',   // Row 3 of 3 of stone
-                'images/grass-block.png',   // Row 1 of 2 of grass
-                'images/grass-block.png'    // Row 2 of 2 of grass
+                'images/water-block.png', // Top row is water
+                'images/stone-block.png', // Row 1 of 3 of stone
+                'images/stone-block.png', // Row 2 of 3 of stone
+                'images/stone-block.png', // Row 3 of 3 of stone
+                'images/grass-block.png', // Row 1 of 2 of grass
+                'images/grass-block.png' // Row 2 of 2 of grass
             ],
             numRows = 6,
             numCols = 5,
-            row, col;
-        
+            row,
+            col;
+
         // Before drawing, clear existing canvas
-        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         /* Loop through the number of rows and columns we've defined above
          * and, using the rowImages array, draw the correct image for that
@@ -179,6 +183,7 @@ var Engine = (function(global) {
          */
         for (row = 0; row < numRows; row++) {
             for (col = 0; col < numCols; col++) {
+
                 /* The drawImage function of the canvas' context element
                  * requires 3 parameters: the image to draw, the x coordinate
                  * to start drawing and the y coordinate to start drawing.
@@ -188,12 +193,10 @@ var Engine = (function(global) {
                  */
                 ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
 
-
                 // Draw scores and hints
                 ctx.font = '20px 微软雅黑';
                 ctx.fillStyle = '#fe5959';
                 ctx.fillText('得分： ' + score, 380, 30);
-
 
                 ctx.font = '18px 微软雅黑';
                 ctx.fillStyle = '#666';
@@ -209,22 +212,22 @@ var Engine = (function(global) {
      * on your enemy and player entities within app.js
      */
     function renderEntities() {
+
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-        allGems.forEach(function(gem) {
+        allGems.forEach(function (gem) {
             gem.render();
         });
-        allEnemies.forEach(function(enemy) {
+        allEnemies.forEach(function (enemy) {
             enemy.render();
         });
 
         player.win();
         player.render();
 
-
         // Draw congratulations
-        if(iswin) {
+        if (iswin) {
 
             ctx.font = '80px 微软雅黑';
             ctx.fillStyle = 'red';
@@ -238,10 +241,10 @@ var Engine = (function(global) {
 
     // Impact checking
     function checkCollisions() {
-        allEnemies.forEach(function(enemy) {
+        allEnemies.forEach(function (enemy) {
             enemy.checkCollision(player);
         });
-        allGems.forEach(function(gem) {
+        allGems.forEach(function (gem) {
             gem.checkCollision(player);
         });
     }
@@ -252,14 +255,14 @@ var Engine = (function(global) {
      */
     function reset() {
         player.reset();
-        allEnemies.forEach(function(enemy) {
+        allEnemies.forEach(function (enemy) {
             enemy.reset();
         });
-        allGems.forEach(function(gem) {
+        allGems.forEach(function (gem) {
             gem.reset();
         });
         iswin = false;
-        renderEntities();      
+        renderEntities();
     }
 
     /* Go ahead and load all of the images we know we're going to need to
