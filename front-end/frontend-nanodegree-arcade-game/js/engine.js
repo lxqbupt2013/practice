@@ -21,11 +21,7 @@ var Engine = (function(global) {
     var doc = global.document,
         win = global.window,
         canvas = doc.createElement('canvas'),
-        canvas_player = doc.createElement('canvas'),
-        canvas_win = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
-        ctx_player = canvas_player.getContext('2d'),
-        ctx_win = canvas_win.getContext('2d'),
         lastTime,
         gamePause = false;
 
@@ -48,12 +44,13 @@ var Engine = (function(global) {
 
         document.addEventListener('keyup', function(e) {
             if(e.keyCode === 32 && iswin === false) {
-                throttle(changePause,null,1500);
-                /*throttle参数介绍
-                 * func 用来被触发的函数，比如ajax请求
-                 * context 函数的执行上下文,也就是函数的this指向
-                 * interval 执行被触发的函数隔多少毫秒才可以被执行一次
+
+                /*throttle(func, context, interval)参数介绍
+                 * func: Function to be triggered
+                 * context: The execution context of the function, which is the point of this
+                 * interval: How many milliseconds can be executed before executing the triggered function
                  */
+                throttle(changePause,null,1500);
             } 
       
             if(e.keyCode === 32 && iswin === true) {
@@ -87,7 +84,10 @@ var Engine = (function(global) {
     }
 
 
-    // 函数防抖
+    // throttle
+    /* Space events are triggered frequently.
+     * Set the timer to ignore repeated taps in a very short time.
+     */
     function throttle(func, context, interval){
         clearTimeout(func.timer);
         func.cur = Date.now();
@@ -97,7 +97,7 @@ var Engine = (function(global) {
 
          if(func.cur - func.start > interval){
             func.call(context);
-            func.start = fn.cur;
+            func.start = func.cur;
         }
     }
 
@@ -122,14 +122,16 @@ var Engine = (function(global) {
      * on the entities themselves within your app.js file).
      */
     function update(dt) {
+        // Pause when game is successful
         if (iswin === true) {
             gamePause = true;
             // iswin = false;
         }
+        // Update when not paused
         if (!gamePause) {
             updateEntities(dt);
         }
-        // checkCollisions();
+        checkCollisions();
     }
 
     /* This is called by the update function and loops through all of the
@@ -186,6 +188,8 @@ var Engine = (function(global) {
                  */
                 ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
 
+
+                // Draw scores and hints
                 ctx.font = '20px 微软雅黑';
                 ctx.fillStyle = '#fe5959';
                 ctx.fillText('得分： ' + score, 380, 30);
@@ -218,6 +222,8 @@ var Engine = (function(global) {
         player.win();
         player.render();
 
+
+        // Draw congratulations
         if(iswin) {
 
             ctx.font = '80px 微软雅黑';
@@ -228,6 +234,16 @@ var Engine = (function(global) {
             ctx.fillStyle = '#000';
             ctx.fillText('按空格键继续游戏', 180, 300);
         }
+    }
+
+    // Impact checking
+    function checkCollisions() {
+        allEnemies.forEach(function(enemy) {
+            enemy.checkCollision(player);
+        });
+        allGems.forEach(function(gem) {
+            gem.checkCollision(player);
+        });
     }
 
     /* This function does nothing but it could have been a good place to
@@ -259,7 +275,6 @@ var Engine = (function(global) {
         'images/gem-blue.png',
         'images/gem-green.png',
         'images/gem-orange.png',
-        'images/timg.jpeg',
         'images/char-boy.gif'
     ]);
     Resources.onReady(init);

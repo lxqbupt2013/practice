@@ -16,6 +16,9 @@ js文件夹：
  - engine.js： 用于定义绘制和渲染相关的函数，是游戏的入口
  - app.js: 用于定义游戏中的对象
 
+#### 已知bug
+空格暂停和重启有时不起作用，未知原因
+
 #### 优达学城的说明
 
 > Students should use this [rubric](https://review.udacity.com/#!/projects/2696458597/rubric) for self-checking their submission. Make sure the functions you write are **object-oriented** - either class functions (like Player and Enemy) or class prototype functions such as Enemy.prototype.checkCollisions, and that the keyword 'this' is used appropriately within your class and class prototype functions to refer to the object the function is called upon. Also be sure that the **readme.md** file is updated with your instructions on both how to 1. Run and 2. Play your arcade game.

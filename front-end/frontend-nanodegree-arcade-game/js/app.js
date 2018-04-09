@@ -4,7 +4,7 @@ var Enemy = function(x, y, speed) {
     // we've provided one for you to get started
     this.x = x;
     this.y = y;
-    this.speed = speed || (70+ Math.random() * 80);
+    this.speed = speed || (70 + Math.random() * 80);
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
@@ -22,10 +22,12 @@ Enemy.prototype.update = function(dt) {
 
 };
 
+// Enemy's boundary detection
 Enemy.prototype.outlineCheck = function(x, y, speed) {
     if(this.x > 402) {
         this.x = -10;
-        this.speed = speed || (70+ Math.random() * 80);
+        // Recharge random speed to simulate new enemy
+        this.speed = speed || (70 + Math.random() * 80);
     }
 }
 
@@ -34,6 +36,7 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+// Impact checking for player and emeny
 Enemy.prototype.checkCollision = function(player) {
     var y_check = (this.y - player.y < 40 ) && (this.y - player.y > -40);
     var x_check = (this.x - player.x < 50 ) && (this.x - player.x > -50);
@@ -50,7 +53,7 @@ Enemy.prototype.checkCollision = function(player) {
 Enemy.prototype.reset = function() {
     allEnemies.forEach(function(enemy) {
         enemy.y = 83 * Math.floor(Math.random() * 3) + 55;
-        enemy.speed = 70+ Math.random() * 80;
+        enemy.speed = 70 + Math.random() * 80;
     });
 }
 
@@ -64,11 +67,14 @@ var Player = function(x, y) {
 
 };
 
+
+// Update the player's position, required method for game
 Player.prototype.update = function(dt) {
 
     this.outlineCheck();
     // this.win();
 };
+
 
 Player.prototype.reset = function() {
     player.x = 100 * 2;
@@ -83,6 +89,7 @@ Player.prototype.render = function() {
 };
 
 
+// Player direction control
 Player.prototype.handleInput = function (movement) {
     switch (movement) {
         case 'left': this.x -= 101; break;
@@ -92,16 +99,13 @@ Player.prototype.handleInput = function (movement) {
     }
 }
 
+// Victory checking
 Player.prototype.win = function() {
 
     if(player.y < 55 && iswin === false) {
 
         score = score + 300;
 
-        // ctx.font = '20px 微软雅黑';
-        // ctx.fillStyle = '#fe5959';
-        // ctx.fillText('You Win!', 100, 150);
-        // ctx.drawImage(Resources.get('images/timg.jpeg'), 0, 20);
         iswin = true;
     }
 
@@ -110,6 +114,7 @@ Player.prototype.win = function() {
     return iswin;
 }
 
+// Player's boundary detection
 Player.prototype.outlineCheck = function() {
     if(player.x > 402) {
         player.x = 402;
@@ -125,6 +130,8 @@ Player.prototype.outlineCheck = function() {
     }
 }
 
+// Gem objects
+// Player picks for extra points
 var Gem = function(x, y, type) {
     this.x = x;
     this.y = y;
@@ -135,11 +142,13 @@ var Gem = function(x, y, type) {
                 ];
 }
 
+
 Gem.prototype.render = function() {
 
     ctx.drawImage(Resources.get(this.sprite[this.type]), this.x, this.y);    
 }
 
+// Impact checking for player and gems
 Gem.prototype.checkCollision = function(player) {
 
     var y_check = (this.y - player.y < 38 ) && (this.y - player.y > -38 );
@@ -175,13 +184,6 @@ Gem.prototype.reset = function() {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-// var allEnemies = function() {
-//     var bug_nums = 3 + Math.random() * 0.1 * 7;
-//
-//     for(var i = 0; i < bug_nums; i++) {
-//         return
-//     }
-// }
 
 var allEnemies = [];
 var player = new Player(100 * 2, 83 * 3 + 55);
@@ -191,20 +193,15 @@ var iswin = false;
 
 
 window.onload = function() {
+
+    // Random enemy number between 3 and 6
     var enemy_num = 3 + Math.floor(Math.random()* 3);
     
-    var n = -1;
-    
-    // function creatEnemies = function() {
+    var enemy_create__dt = -1;
 
-    //     for(var i = 0; i <= enemy_num; i++) {
-    //         var enemy_init_y = 83 * Math.floor(Math.random() * 3) + 55;
-    //         var arg = new Enemy(0, enemy_init_y);
-    //         allEnemies.push(arg);
-    //     }
-    // }
 
     var createGems = function() {
+        // Random gem number between 1 and 3
         var gems_num = 1 + Math.floor(Math.random()* 2);
 
         for(var i = 0; i <= gems_num; i++) {
@@ -218,17 +215,18 @@ window.onload = function() {
 
      createGems();
 
+    // Create an enemy
     var createEnemy = function() {
         var enemy_init_y = 83 * Math.floor(Math.random() * 3) + 55;
-        var arg = new Enemy(0, enemy_init_y);
-        return arg;
+        var enemy = new Enemy(0, enemy_init_y);
+        return enemy;
     }
 
-
+    // Create enemies in order
     var creatEnemies = setInterval(function() {
         allEnemies.push(createEnemy());
-        n ++;
-        if(n == enemy_num) {
+        enemy_create__dt ++;
+        if(enemy_create__dt == enemy_num) {
             clearInterval(creatEnemies)
         }
     }, 500);
@@ -247,13 +245,3 @@ document.addEventListener('keyup', function(e) {
     };
     player.handleInput(allowedKeys[e.keyCode]);
 });
-
-
-setInterval(function() {
-    allEnemies.forEach(function(enemy) {
-        enemy.checkCollision(player);
-    });
-    allGems.forEach(function(gem) {
-        gem.checkCollision(player);
-    });
-}, 100);
