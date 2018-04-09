@@ -1,0 +1,45 @@
+*,
+html {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    width: 100%;
+}
+
+#parentbox {
+    padding: 3px;
+    margin: 30px 0 0 30px;
+}
+
+.dragbox {
+    position: relative;
+    display: inline-block;
+    *zoom: 1;
+    *display: inline;
+    margin: 7px;
+}
+
+.shu {
+    position: relative;
+    top: -2px;
+    height: 76px;
+    vertical-align: center;
+    visibility: hidden;
+}
+.dragimg {
+    position: relative;
+    display: inline-block;
+    padding: 2px;
+    margin: 2px;
+    border: solid 2px #dadadb;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    cursor: move;
+}
+
+.dragimg {
+    display: inline;
+}
