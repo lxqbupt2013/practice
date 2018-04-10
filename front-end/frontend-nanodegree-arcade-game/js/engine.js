@@ -13,13 +13,13 @@
  * writing app.js a little simpler to work with.
  */
 
-var Engine = (function (global) {
+let Engine = (function (global) {
 
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
      * set the canvas elements height/width and add it to the DOM.
      */
-    var doc = global.document,
+    let doc = global.document,
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
@@ -41,7 +41,7 @@ var Engine = (function (global) {
          * would be the same for everyone (regardless of how fast their
          * computer is) - hurray time!
          */
-        var now = Date.now(),
+        let now = Date.now(),
             dt = (now - lastTime) / 1000.0;
 
         document.addEventListener('keyup', function (e) {
@@ -80,7 +80,7 @@ var Engine = (function (global) {
         win.requestAnimationFrame(main);
     }
 
-    var changePause = function () {
+    let changePause = function () {
         gamePause = gamePause === false ? true : false;
     };
 
@@ -161,7 +161,7 @@ var Engine = (function (global) {
         /* This array holds the relative URL to the image used
          * for that particular row of the game level.
          */
-        var rowImages = [
+        let rowImages = [
                 'images/water-block.png', // Top row is water
                 'images/stone-block.png', // Row 1 of 3 of stone
                 'images/stone-block.png', // Row 2 of 3 of stone
@@ -191,7 +191,7 @@ var Engine = (function (global) {
                  * so that we get the benefits of caching these images, since
                  * we're using them over and over.
                  */
-                ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
+                ctx.drawImage(Resources.get(rowImages[row]), col * CELL_WIDTH, row * 83);
 
                 // Draw scores and hints
                 ctx.font = '20px 微软雅黑';

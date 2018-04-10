@@ -1,5 +1,7 @@
+const CELL_WIDTH = CELL_WIDTH;
+
 // Enemies our player must avoid
-var Enemy = function (x, y, speed) {
+let Enemy = function (x, y, speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
     this.x = x;
@@ -39,8 +41,10 @@ Enemy.prototype.render = function () {
 
 // Impact checking for player and emeny
 Enemy.prototype.checkCollision = function (player) {
-    var yCheck = (this.y - player.y < 40) && (this.y - player.y > -40);
-    var xCheck = (this.x - player.x < 50) && (this.x - player.x > -50);
+
+    let yCheck = Math.abs(this.y - player.y) < 40;
+    let xCheck = Math.abs(this.x - player.x) < 50;
+
     if (yCheck && xCheck) {
         player.reset();
         score = 0;
@@ -59,7 +63,7 @@ Enemy.prototype.reset = function () {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-var Player = function (x, y) {
+let Player = function (x, y) {
     this.x = x;
     this.y = y;
     this.sprite = 'images/char-boy.png';
@@ -89,10 +93,10 @@ Player.prototype.render = function () {
 Player.prototype.handleInput = function (movement) {
     switch (movement) {
         case 'left':
-            this.x -= 101;
+            this.x -= CELL_WIDTH;
             break;
         case 'right':
-            this.x += 101;
+            this.x += CELL_WIDTH;
             break;
         case 'up':
             this.y -= 83;
@@ -140,7 +144,7 @@ Player.prototype.outlineCheck = function () {
 
 // Gem objects
 // Player picks for extra points
-var Gem = function (x, y, type) {
+let Gem = function (x, y, type) {
     this.x = x;
     this.y = y;
     this.type = type;
@@ -158,8 +162,8 @@ Gem.prototype.render = function () {
 // Impact checking for player and gems
 Gem.prototype.checkCollision = function (player) {
 
-    var yCheck = (this.y - player.y < 38) && (this.y - player.y > -38);
-    var xCheck = (this.x - player.x < 5) && (this.x - player.x > -5);
+    let yCheck = Math.abs(this.y - player.y) < 38;
+    let xCheck = Math.abs(this.x - player.x) < 5;
 
     if (yCheck && xCheck) {
         if (this.type === 0) {
@@ -193,28 +197,28 @@ Gem.prototype.reset = function () {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
-var allEnemies = [];
-var player = new Player(100 * 2, 83 * 3 + 55);
-var allGems = [];
-var score = 0;
-var iswin = false;
+let allEnemies = [];
+let player = new Player(100 * 2, 83 * 3 + 55);
+let allGems = [];
+let score = 0;
+let iswin = false;
 
 window.onload = function () {
 
     // Random enemy number between 3 and 6
-    var enemyNum = 3 + Math.floor(Math.random() * 3);
+    let enemyNum = 3 + Math.floor(Math.random() * 3);
 
-    var enemyCreateDt = -1;
+    let enemyCreateDt = -1;
 
-    var createGems = function () {
+    let createGems = function () {
         // Random gem number between 1 and 3
-        var gemsNum = 1 + Math.floor(Math.random() * 2);
+        let gemsNum = 1 + Math.floor(Math.random() * 2);
 
-        for (var i = 0; i <= gemsNum; i++) {
-            var gemInitX = 100 * Math.floor(Math.random() * 5);
-            var gemInitY = 83 * Math.floor(Math.random() * 3) + 90;
-            var gemIntiType = Math.floor(Math.random() * 3);
-            var gem = new Gem(gemInitX, gemInitY, gemIntiType);
+        for (let i = 0; i <= gemsNum; i++) {
+            let gemInitX = 100 * Math.floor(Math.random() * 5);
+            let gemInitY = 83 * Math.floor(Math.random() * 3) + 90;
+            let gemIntiType = Math.floor(Math.random() * 3);
+            let gem = new Gem(gemInitX, gemInitY, gemIntiType);
             allGems.push(gem);
         }
     };
@@ -222,14 +226,14 @@ window.onload = function () {
     createGems();
 
     // Create an enemy
-    var createEnemy = function () {
-        var enemyInitY = 83 * Math.floor(Math.random() * 3) + 55;
-        var enemy = new Enemy(0, enemyInitY);
+    let createEnemy = function () {
+        let enemyInitY = 83 * Math.floor(Math.random() * 3) + 55;
+        let enemy = new Enemy(0, enemyInitY);
         return enemy;
     };
 
     // Create enemies in order
-    var creatEnemies = setInterval(function () {
+    let creatEnemies = setInterval(function () {
         allEnemies.push(createEnemy());
         enemyCreateDt++;
         if (enemyCreateDt === enemyNum) {
@@ -243,7 +247,7 @@ window.onload = function () {
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function (e) {
-    var allowedKeys = {
+    let allowedKeys = {
         37: 'left',
         38: 'up',
         39: 'right',
