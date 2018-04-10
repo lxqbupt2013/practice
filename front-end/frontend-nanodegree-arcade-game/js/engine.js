@@ -44,25 +44,6 @@ let Engine = (function (global) {
         let now = Date.now(),
             dt = (now - lastTime) / 1000.0;
 
-        document.addEventListener('keyup', function (e) {
-            if (e.keyCode === 32 && iswin === false) {
-
-                /*throttle(func, context, interval)参数介绍
-                 * func: Function to be triggered
-                 * context: The execution context of the function, which is the point of this
-                 * interval: How many milliseconds can be executed before executing the triggered function
-                 */
-                throttle(changePause, null, 1500);
-            }
-
-            if (e.keyCode === 32 && iswin === true) {
-
-                changePause();
-                reset();
-            }
-
-        });
-
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
          */
@@ -110,6 +91,27 @@ let Engine = (function (global) {
         reset();
         lastTime = Date.now();
         main();
+
+
+        document.addEventListener('keyup', function (e) {
+            if (e.keyCode === 32 && iswin === false) {
+
+                /*throttle(func, context, interval)参数介绍
+                 * func: Function to be triggered
+                 * context: The execution context of the function, which is the point of this
+                 * interval: How many milliseconds can be executed before executing the triggered function
+                 */
+                //throttle(changePause, null, 1500);
+                changePause()
+            }
+
+            if (e.keyCode === 32 && iswin === true) {
+
+                changePause();
+                reset();
+            }
+
+        });
     }
 
     /* This function is called by main (our game loop) and itself calls all

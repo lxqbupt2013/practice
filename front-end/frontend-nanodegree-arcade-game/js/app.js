@@ -1,4 +1,4 @@
-const CELL_WIDTH = CELL_WIDTH;
+const CELL_WIDTH = 101;
 
 // Enemies our player must avoid
 let Enemy = function (x, y, speed) {

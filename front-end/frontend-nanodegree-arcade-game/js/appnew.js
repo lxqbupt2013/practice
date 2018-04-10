@@ -3,7 +3,7 @@ let allGems = [];
 let score = 0;
 let iswin = false;
 
-const CELL_WIDTH = CELL_WIDTH;
+const CELL_WIDTH = 101;
 
 /**
 * @description 虫类
