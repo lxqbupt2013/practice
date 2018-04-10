@@ -16,6 +16,10 @@ js文件夹：
  - engine.js： 用于定义绘制和渲染相关的函数，是游戏的入口
  - app.js: 用于定义游戏中的对象
 
+#### 练习目的
+1. 学习ES6类和对象的创建方法
+2. 了解canvas
+3. requestAnimationFrame
 
 #### 优达学城的说明
 
