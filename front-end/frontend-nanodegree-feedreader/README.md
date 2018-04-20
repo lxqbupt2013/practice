@@ -14,9 +14,9 @@
  - fonts
 
  - jasmine
-   &nbsp; - lib
-   &nbsp; - spec
-   &nbsp;&nbsp;&nbsp;feedreader.js: 测试文件
+   -- lib
+   -- spec
+      feedreader.js: 测试文件
 
  - js
    app.js: 主js文件
