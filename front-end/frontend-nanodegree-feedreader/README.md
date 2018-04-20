@@ -6,8 +6,6 @@
 
 ### Catalog Preview
 
-[TOC]
-
  - css
  icomoon.css: icon引入
  normalize.css: 规范adjust
@@ -16,9 +14,9 @@
  - fonts
 
  - jasmine
-  - lib
-  - spec
-   - feedreader.js: 测试文件
+     - lib
+     - spec
+         - feedreader.js: 测试文件
 
  - js
    app.js: 主js文件
