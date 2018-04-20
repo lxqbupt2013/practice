@@ -32,12 +32,13 @@ $(function() {
          * and that the URL is not empty.
          */
 
-         it('urls are defined', function() {
-            for(var i = 0; i < allFeeds.length; i ++) {
-                expect(allFeeds[i].url).toBeDefined();
-                expect(allFeeds[i].url.length).not.toBe(0);                
-            }            
-         });
+        it('urls are defined', function() {
+
+            allFeeds.forEach(function(feed) {
+                expect(feed.url).toBeDefined();
+                expect(feed.url.length).not.toBe(0);                     
+            });      
+        });
 
 
         /* TODO: Write a test that loops through each feed
@@ -45,12 +46,12 @@ $(function() {
          * and that the name is not empty.
          */
 
-         it('names are defined', function() {
-            for(var i = 0; i < allFeeds.length; i ++) {
-                expect(allFeeds[i].name).toBeDefined();
-                expect(allFeeds[i].name.length).not.toBe(0);                
-            }            
-         });
+        it('names are defined', function() {
+            allFeeds.forEach(function(feed) {
+                expect(feed.name).toBeDefined();
+                expect(feed.name.length).not.toBe(0);                     
+            });             
+        });
     });
 
 
@@ -58,16 +59,11 @@ $(function() {
 
     describe('The menu', function() {
 
-        var $menuIcon, $body;
+        let $menuIcon, $body;
 
         beforeEach(function() {
             $body = $('body');
             $menuIcon = $('.menu-icon-link');
-        });
-
-        afterEach(function() {
-            $body = null;
-            $menuIcon = null;
         });
 
         /* TODO: Write a test that ensures the menu element is
@@ -106,18 +102,15 @@ $(function() {
          */
 
         beforeEach(function(done) {
-            loadFeed(0, function () {
-                done();
-            });
+            loadFeed(0, done);
 
             // spyOn(window, 'loadFeed');
         });
 
-        it('loadFeed function is called', function(done) {
+        it('loadFeed function is called', function() {
 
             // expect(loadFeed).toHaveBeenCalled();
             expect($('.feed .entry').length).toBeGreaterThan(0);
-            done();
         })
 
 
@@ -133,24 +126,17 @@ $(function() {
          * Remember, loadFeed() is asynchronous.
          */
 
-        var feedOld = '';
+        let feedOld = '';
 
         beforeEach(function(done) {
             loadFeed(0, function () {
                 feedOld = $('.feed').html();
-                loadFeed(1, function () {
-                    done();
-                });
+                loadFeed(1, done);
             }); 
         });
 
-        afterEach(function() {
-            feedOld = null;
-        });
-
-        it('When a new feed is loaded by the loadFeed function that the content actually changes', function(done) {
-            expect($('.feed').html()).not.toEqual(feedOld);
-            done();           
+        it('When a new feed is loaded by the loadFeed function that the content actually changes', function() {
+            expect($('.feed').html()).not.toEqual(feedOld);         
         });
 
     });
