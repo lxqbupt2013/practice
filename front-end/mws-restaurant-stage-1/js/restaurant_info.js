@@ -5,6 +5,7 @@ var map;
  * Initialize Google map, called from HTML.
  */
 window.initMap = () => {
+  registerServiceWorker();
   fetchRestaurantFromURL((error, restaurant) => {
     if (error) { // Got an error!
       console.error(error);
@@ -162,4 +163,17 @@ getParameterByName = (name, url) => {
   if (!results[2])
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+
+registerServiceWorker = () => {
+
+
+    if (!navigator.serviceWorker) return;
+
+    navigator.serviceWorker.register('./sw.js').then(function(reg) {
+        console.log('SW worked!');
+    }).catch(function() {
+        console.log('SW failed!');
+    });
 }
