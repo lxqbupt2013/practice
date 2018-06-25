@@ -5,8 +5,6 @@
 4. 添加了focus交互
 5. 缓存了来自google的资源相应
 
-### 尚存在的问题
-部分带有token认证的google资源无法缓存。尝试自动将network中的request抓取下来，但是js好像做不到
 
 ### 项目查看方法
 windows系统下运行命令：
