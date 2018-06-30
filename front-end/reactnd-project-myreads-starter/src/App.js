@@ -13,7 +13,7 @@ class BooksApp extends Component {
   componentDidMount() {
       BooksAPI.getAll().then((books) => {
           this.setState({ books })
-      })
+      }).catch((e) => {console.log(e)})
   }
   
   updateBook = (book, value) => {
@@ -23,10 +23,7 @@ class BooksApp extends Component {
 
               let newBooks;
 
-              console.log('1',book.shelf )
               book.shelf = value;
-
-              console.log('2',book.shelf )
 
               // 获取除了当前操作的图书的所有其它图书
               const restOfBooksInShelf = prevState.books.filter(
@@ -44,8 +41,10 @@ class BooksApp extends Component {
                 books: newBooks
               };
           })
-      })
+      }).catch((e) => {console.log(e)})
   }
+
+
 
   render() {
 
@@ -59,7 +58,7 @@ class BooksApp extends Component {
             )}/>
             <Route path='/add' render={() => (
                 <AddBook
-                    books={this.state.books}
+                    shelfBooks={this.state.books}
                     onUpdateBook={(book, value) => {
                         this.updateBook(book, value)
                     }}
