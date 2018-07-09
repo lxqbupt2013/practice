@@ -1,0 +1,140 @@
+html, body, .root {
+    height: 100%;
+}
+
+body {
+    line-height: 1.5;
+}
+
+body, .app {
+    background: white;
+}
+
+h1, h3 {
+    color: #fff;
+    display: inline-block;
+    font-weight: 100;
+    margin: 0 0 0 0.5em;
+}
+
+h4 {
+    margin: 0;
+}
+
+button {
+    background: none;
+    border: none;
+}
+
+.header-title {
+    width: 100%;
+    height: 3.4em;
+    line-height: 3.4em;
+    padding: 0.25em;
+    background: #000;
+    margin-left: 0;
+    text-align: center;
+}
+
+/* main page */
+
+.locList {
+    float: left;
+    height: 100%;
+    width: 18em;
+    transform: translate3d(0, 0, 0);
+    transition: transform 0.2s;
+    background: #fff;
+}
+
+
+/*屏幕大小不同，汉堡图标点击效果不同*/
+
+@media (max-width: 600px) {
+    .locList {
+        position: fixed;
+        z-index: 100;
+        margin-top: 4.5em;
+    }
+    .mapArea {
+        z-index: 1;
+        margin: 0;
+    }
+}
+
+@media (min-width: 600px) {
+    .mapArea {
+        transition: padding-top .2s ease-in-out;
+        margin-left: 18em;
+    }
+
+    .menu-hidden .mapArea {
+        transform: translate3d(-18em, 0, 0);
+        transition: transform 0.2s;
+        width: 100%;
+    }
+}
+
+.mapArea {
+    min-width: 300px;
+    height: 100%;
+}
+
+.header {
+    background: #000;
+    top: 0;
+    width: 100%;
+    padding: 0.5em 1em;
+}
+
+
+
+.menu-hidden .locList {
+    transform: translate3d(-19em, 0, 0);
+    transition: transform 0.2s;
+}
+
+.search-input-wrapper {
+    width: 100%;
+    background: #5484BA;
+    box-shadow: 0 5px 5px rgba(0,0,0,0.19), 0 0 1px rgba(0,0,0,0.23);
+}
+
+.search-input-wrapper input {
+    width: 80%;
+    padding: 0.5em 0.25em;
+    font-size: 1.25em;
+    border: none;
+    outline: none;
+}
+
+.searchBtn {
+    display: inline-block;
+    width: 17%;
+    height: 1.8em;
+    color: #fff;
+    text-align: center;
+}
+
+#map {
+    height: 89%;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    color: #999;
+}
+
+li {
+    display: block;
+    height:  2.5em;
+    line-height: 2.5em;
+    padding-left: 2em;
+}
+
+li:hover {
+    background: #bad7f6;
+    color: #fff;
+    cursor: pointer;
+}
