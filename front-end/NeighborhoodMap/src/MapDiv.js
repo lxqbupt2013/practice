@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
+import LoadingContainer from './LoadingContainer'
 import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 
 class MapDiv extends Component {
@@ -17,12 +18,15 @@ class MapDiv extends Component {
         activeMarker: {},
         showingInfoWindow: false,
         bounds: {},
-        resContent: {}
+        resContent: {},
+        markerProp: [],
+        showIndex: -1
     }
 
     // 只在第一次加载全部数据时定义地图边界，保证地图边界不跟随筛选后props变化
     componentDidMount() {
 
+        // 只在第一次加载全部数据时定义地图边界，保证地图边界不跟随筛选后props变化
         let _bounds = new this.props.google.maps.LatLngBounds();
         for (var i = 0; i < this.props.locations.length; i++) {
             _bounds.extend(this.props.locations[i].location);
@@ -31,8 +35,26 @@ class MapDiv extends Component {
         this.setState({
             bounds: _bounds
         })
+
+        // 防止markerProp无限增多
+        if(this.props.locations.length === this.state.markerProp.length) {
+            this.setState({
+                markerProp: []
+            })
+        }
     }
 
+    componentWillReceiveProps(nextprop) {
+
+        let index = nextprop.showIndex;
+        // 获取被点击地点列表条目对应的名字
+        let markerName = this.state.markerProp[index].name;
+        // 通过 refs 获取对应的 marker 对象，
+        // 注，该 marker 是来自 Google Maps Api 的对象，而不是来自 google-maps-react 的 <Marker /> 组件
+        let clickedMarker = this.refs[markerName].marker;
+        // 调用点击回调函数以显示 infowindow
+        this.onMarkerClick(this.state.markerProp[index], clickedMarker);
+    }
 
     // 点击Marker后从维基百科fetch数据
     onMarkerClick = (props, marker) => {
@@ -45,7 +67,7 @@ class MapDiv extends Component {
 
         // 通过跨域的方式取数据
         // 中文取到的数据有限，有部分地点数据缺失
-        const request = new Request(marker.imgUrl, { mode: 'cors' });
+        const request = new Request(marker.contentUrl, { mode: 'cors' });
         fetch(request)
             .then((response) => {return response.json()})
             .then((data) => {
@@ -62,7 +84,11 @@ class MapDiv extends Component {
                     }) 
                 }
             })
-            .catch((error) => (console.log(error)));
+            .catch((error) => {
+                this.setState({
+                    resContent: '获取第三方数据失败，错误信息：' + error
+                }) 
+            });
     };
 
 
@@ -76,11 +102,10 @@ class MapDiv extends Component {
         }
       };
 
-
     render() {
 
         const { handClick, locations } = this.props
-        const { bounds, resContent, activeMarker, showingInfoWindow } = this.state;
+        const { bounds, resContent, activeMarker, showingInfoWindow, markerProp} = this.state;
 
         const style = {
             width: '100vw',
@@ -88,10 +113,18 @@ class MapDiv extends Component {
         }
 
         // 当地图加载过程的处理
+        let timer = 0;
+        timer = window.setTimeout(function() {}, 600);
+
         let mapContent;
-        if (!this.props.loaded) {
-            mapContent = (<div>Loading...</div>)
+        if (!this.props.loaded && timer < 6) {
+            mapContent = (<div>Loading...</div>);
         }
+
+        if(!this.props.loaded && timer >= 6) {
+            mapContent = (<div>加载超时，请检查网络</div>)           
+        }
+
         mapContent = (
             <Map
                 className={'map'}
@@ -105,15 +138,20 @@ class MapDiv extends Component {
                 onClick={this.onMapClicked}
             >
 
-               {locations.map((loc) => (
-
-                    <Marker key={loc.title}
+                {locations.map((loc) => {
+                    
+                    var newmark = (<Marker 
+                        key={loc.title}
                         onClick={this.onMarkerClick}
-                            name={loc.title}
-                            position={loc.location}
-                            imgUrl={'https://zh.wikipedia.org/w/api.php?action=query&format=json&prop=categories&titles=' + loc.title + '&origin=*'}
-                        />
-                ))}
+                        name={loc.title}
+                        ref={loc.title}
+                        position={loc.location}
+                        contentUrl={'https://zh.wikipedia.org/w/api.php?action=query&format=json&prop=categories&titles=' + loc.title + '&origin=*'}
+                        />) 
+
+                    markerProp.push(newmark.props);
+                    return newmark;
+                })}
 
                 <InfoWindow
                     marker={activeMarker}
@@ -127,6 +165,7 @@ class MapDiv extends Component {
                 </InfoWindow>
 
             </Map>
+
         )
 
         return (
@@ -150,5 +189,6 @@ class MapDiv extends Component {
 
 export default GoogleApiWrapper({
     apiKey: "AIzaSyDM44CkBZDUXX7yApms7jv_THSjRRlmga8",
-    language: "zh-cn"
+    language: "zh-cn",
+    LoadingContainer: LoadingContainer
 })(MapDiv);

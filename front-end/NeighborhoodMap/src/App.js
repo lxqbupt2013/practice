@@ -3,33 +3,17 @@ import './App.css'
 import MapDiv from './MapDiv'
 import LocList from './LocList'
 import escapeRegExp from 'escape-string-regexp'
-import registerServiceWorker from './registerServiceWorker';
 
 class NeighborhoodApp extends Component {
 
-    // allLocations： 全部地点，用于过滤时和全集进行比较
     // locations: 用于作为props传递给其他组件，作为过滤后的地点集
     // hiddenMenu: 汉堡图标通过更改该state来更改父元素class
     // query: 用于接收来自子组件的过滤条件
     state = {
-        allLocations: [
-            {title: '金融街购物中心', location: {lat: 39.915725, lng: 116.361656}},
-            {title: '全国政协礼堂', location: {lat: 39.919562, lng: 116.364399}},
-            {title: '故宫', location: {lat: 39.916345, lng: 116.397155}},
-            {title: '国家大剧院', location: {lat: 39.904885, lng: 116.38951}},
-            {title: '西单文化广场', location: {lat: 39.908842, lng: 116.374797 }},
-            {title: '北海公园', location: {lat: 39.926185, lng: 116.389728}}
-        ],
-        locations: [
-            {title: '金融街购物中心', location: {lat: 39.915725, lng: 116.361656}},
-            {title: '全国政协礼堂', location: {lat: 39.919562, lng: 116.364399}},
-            {title: '故宫', location: {lat: 39.916345, lng: 116.397155}},
-            {title: '国家大剧院', location: {lat: 39.904885, lng: 116.38951}},
-            {title: '西单文化广场', location: {lat: 39.908842, lng: 116.374797 }},
-            {title: '北海公园', location: {lat: 39.926185, lng: 116.389728}}
-        ],
+        locations: this.props.allLocations,
         hiddenMenu: '',
-        query: ''
+        query: '',
+        showIndex: -1
     }
 
     // 汉堡图标点击后更改hiddenMenu值，当hiddenMenu为menu-hidden时，LocList向左隐藏
@@ -40,7 +24,7 @@ class NeighborhoodApp extends Component {
     }
 
     // 过滤地点
-    filterLocation= (e, query) => {
+    filterLocation = (e, query) => {
         // 防止input的onChange事件触发事件
         if (e.type === 'click' && e.clientX !== 0 && e.clientY !== 0) {
 
@@ -51,16 +35,17 @@ class NeighborhoodApp extends Component {
             })
 
             const match = new RegExp(escapeRegExp(query), 'i')
-            let newLocations = this.state.allLocations.filter((location) => match.test(location.title))
+            let newLocations = this.props.allLocations.filter((location) => match.test(location.title))
             this.setState({
                 locations: newLocations
             })
         }
     }
 
-    // 注册service worker
-    componentDidMount() {
-        registerServiceWorker();
+    showLocation = (e, index) => {
+        this.setState({
+            showIndex: index
+        })
     }
 
     render() {
@@ -69,10 +54,12 @@ class NeighborhoodApp extends Component {
             <div className={this.state.hiddenMenu}>
                 <LocList 
                     locations={this.state.locations} 
-                    filterLocation={this.filterLocation}/>
+                    filterLocation={this.filterLocation}
+                    showLocation={this.showLocation}/>
                 <MapDiv 
                     locations={this.state.locations}
                     handClick={this.handClick}
+                    showIndex={this.state.showIndex}
                  />
             </div>
         )

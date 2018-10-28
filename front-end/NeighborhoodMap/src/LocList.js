@@ -5,7 +5,8 @@ class LocList extends Component {
 
     static propTypes = {
         locations: PropTypes.array.isRequired,
-        filterLocation: PropTypes.func.isRequired
+        filterLocation: PropTypes.func.isRequired,
+        showLocation: PropTypes.func.isRequired
     }
 
     // 筛选条件
@@ -23,7 +24,7 @@ class LocList extends Component {
     
     render() {
 
-        const { filterLocation, locations } = this.props;
+        const { filterLocation, showLocation, locations } = this.props;
         const { query} = this.state;
 
         return (
@@ -51,11 +52,11 @@ class LocList extends Component {
                 </div>
                 <ul className="loc-list">
                     {locations.map((loc, index) => (
-                        <li key={loc.title} 
+                        <li key={loc.title}
+                            role="button"
                             tabIndex={4 + {index}}
                             onClick={(event) => {
-                                this.changeQuery(loc.title)
-                                filterLocation(event, loc.title)}
+                                showLocation(event, index)}
                             }>
                             {loc.title}
                         </li>
