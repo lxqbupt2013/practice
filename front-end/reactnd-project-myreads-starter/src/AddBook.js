@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 import PropTypes from 'prop-types'
-import BookShelf from './BookShelf'
 import * as _ from 'lodash';
 
 class AddBook extends Component {
     
     static propTypes = {
+        shelfBooks: PropTypes.array.isRequired,
         onUpdateBook: PropTypes.func.isRequired
     }
 
@@ -16,9 +16,30 @@ class AddBook extends Component {
         queryBooks: []
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.setState({queryBooks: nextProps.books});
+
+    preHander = function(books) {
+
+        if (books.length === 0) return books
+
+        books.forEach((book) => {
+            if(!book.imageLinks)  book.imageLinks = {thumbnail: ''};
+        })
+        
+        if(books !== this.props.shelfBooks) {
+
+            books.forEach( (book) => {
+                for (var i = 0; i < this.props.shelfBooks.length; i++) {
+                    if(this.props.shelfBooks[i].id === book.id) {
+                        book.shelf = this.props.shelfBooks[i].shelf
+                        continue;
+                    }
+                    else book.shelf = 'none'
+                }
+            })
+        }
+        return books;
     }
+
     
     updateQuery = (query) => {
         this.setState({ query: query.trim() })
@@ -43,7 +64,7 @@ class AddBook extends Component {
 
             if(resultList) {
                 if (!resultList.error) {
-                    this.setState({queryBooks: resultList})
+                    this.setState({queryBooks: this.preHander(resultList)})
                 }
             }
             else {
@@ -51,11 +72,11 @@ class AddBook extends Component {
                  queryBooks: []
                }) 
             }
-        })        
+        }).catch((e) => {console.log(e)})    
     }
 
     render () {
-        const { books, onUpdateBook } = this.props
+        const { onUpdateBook } = this.props
         const { query, queryBooks } = this.state
 
         return (
@@ -73,12 +94,31 @@ class AddBook extends Component {
                         </div>
                     </div>
                     <div className="search-books-results">
-                        <BookShelf 
-                            shelfBooks={books}
-                            queryBooks={queryBooks}
-                            type=""
-                            onUpdateBook={onUpdateBook}
-                        />
+
+                        <ol className="books-grid">
+                            {queryBooks.map((book) => (
+                                <li key={book.id}>
+                                    <div className="book">
+                                        <div className="book-top">
+                                            <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
+                                            <div className="book-shelf-changer">
+                                                <select value={book.shelf} onChange={e => onUpdateBook(book, e.target.value)}>
+                                                    <option value="move" disabled>Move to...</option>
+                                                    <option value="currentlyReading">Currently Reading</option>
+                                                    <option value="wantToRead">Want to Read</option>
+                                                    <option value="read">Read</option>
+                                                    <option value="none">None</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className="book-title">{book.title}</div>
+                                        <div className="book-authors">{book.authors}</div>
+                                    </div>
+                                </li>
+                            ))}
+                        </ol>
+
+
                     </div>
                 </div>
             </div>
