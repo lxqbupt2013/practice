@@ -1,6 +1,7 @@
 # dragdemo
 图标拖拽组件
 
+使用require.js进行模块化练习
 
 绑定事件：mousedown,mousemove and mouseup
 

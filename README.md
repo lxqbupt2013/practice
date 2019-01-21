@@ -2,4 +2,7 @@
 
 ### 该项目为练手小项目合集
 
-#### 身为国企小透明，有时候手真的痒……
+#### 主要练习内容：
+1. dragdemo: 使用require.js进行模块化练习
+2. feedreader: 主要练习jasmine的使用
+3. restaurant: 主要练习Flex响应式布局，以及service worker来caches资源，还对页面增加了一些语义化修改
